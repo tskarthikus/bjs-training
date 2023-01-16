@@ -35,24 +35,35 @@ const createScene = function () {
     camera.setTarget(BABYLON.Vector3.Zero());
     // This attaches the camera to the canvas
     camera.attachControl(canvas, true);
+    // TODO::<<
+    // gsap.to(mesh.rotation, {y:12, x:5, duration:4, repeat:-1, yoyo:true})
+    // gsap.to(mesh.position, {x:5, duration:4, repeat:-1, yoyo:true})
+    // gsap.to(mesh.scaling, {y:0.5, duration:2, repeat:-1, yoyo:true})
+    // TODO::>>
+
     return {scene, mesh};
 }
 const {scene, mesh} = createScene(); //Call the createScene function
+
+
 
 
 // Register a render loop to repeatedly render the scene
 /**
  * Animate
  */
-let time = Date.now()
+var t = 0;
 engine.runRenderLoop(function () {
-    // Time
-    const currentTime = Date.now()
-    const deltaTime = currentTime - time
-    time = currentTime
+    // TODO::<<
+    t -= 0.00007;
 
-    // Update objects
-    mesh.rotation.x += 0.001 * deltaTime;
+    // // Update objects
+    mesh.rotation.x += t;
+
+    // t -= 0.01;
+    // mesh.position.x = Math.sin(t * 3);
+    // mesh.position.y = Math.cos(t * 3);
+    // TODO::>>
 
     scene.render();
 });
