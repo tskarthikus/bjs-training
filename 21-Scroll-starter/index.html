@@ -117,6 +117,37 @@
 			engine.resize();
 		});
 		
+		var flag = scroll.addFlag(scene, {
+			start: 0,
+			duration: 1000,
+			callback: (value, target)=>{
+				target.sphere.position.x = -5 + (value * 10);
+				target.activeCamera.setTarget(target.sphere.position)
+			},
+			startDirty: true,
+			debug: true
+		})
+		
+		let getHalfHeight = () => {
+			return (document.getElementById('center-text').parentNode.
+				getBoundingClientRect().height * 0.5)
+		}
+		var flag2 = scroll.addFlag(document.getElementById('center-text'), {
+			start: 600,
+			duration: 400,
+			callback: (value, target) => {
+				let yOff = (
+					document.getElementById('center-text').
+					getBoundingClientRect().height + getHalfHeight()) * value;
+				target.style.marginTop = `-${yOff}px`
+				target.style.opacity = 1 - value
+
+			},
+			startDirty: true,
+			debug: true
+		})
+
+	})
 </script>
 </body>
 </html>

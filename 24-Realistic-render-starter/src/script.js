@@ -1,4 +1,5 @@
 import * as BABYLON from "@babylonjs/core/Legacy/legacy";
+import { sceneVertexDeclaration } from "@babylonjs/core/Shaders/ShadersInclude/sceneVertexDeclaration";
 import "@babylonjs/loaders/glTF";
 import './style.css'
   
@@ -8,8 +9,51 @@ import './style.css'
 const canvas = document.getElementById("webgl"); // Get the canvas element
 const engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
 
+const createEnvironmentLighting = (scene, fileName) => {
+    let envLighting = BABYLON.CubeTexture.CreateFromPrefilteredData(fileName, scene);
+    envLighting.gammaSpace = false;
+    scene.environmentTexture = envLighting;
+}
 
-
+const EnableDragAndDropOfEnvLighting = (scene, createEnvironmentLighting) => {
+    const sceneError = "";
+    const filesInput = new BABYLON.FilesInput(
+        scene.getEngine(),
+        null,
+        scene,
+        null,
+        null,
+        null,
+        function() {
+        BABYLON.Tools.ClearLogCache();
+        },
+        null,
+        sceneError
+    );
+    var skyboxPath;
+    filesInput.onProcessFileCallback = function(file, name, extension) {
+        if (filesInput._filesToLoad &&
+        filesInput._filesToLoad.length === 1 &&
+        extension
+        ) {
+            if (extension.toLowerCase() === "dds" ||
+                extension.toLowerCase() === "env"
+            ) {
+                BABYLON.FilesInput.FilesToLoad[name] = file;
+                skyboxPath = "file:" + file.correctName;
+                return false;
+            }
+        }
+        return true;
+    }.bind(this);
+    filesInput.reload = function() {
+        console.log(skyboxPath);
+        createEnvironmentLighting(scene, skyboxPath);
+    };
+    filesInput.monitorElementForDragNDrop(
+        scene.getEngine().getRenderingCanvas()
+    );
+};
 const createScene = function () {
     // Scene
     const scene = new BABYLON.Scene(engine);
@@ -44,6 +88,19 @@ const createScene = function () {
     camera.attachControl(canvas, true);
 
     //Todo:: Import jaguar
+    BABYLON.SceneLoader.ImportMesh(
+        "",
+        "/",
+        "free_jaguar_f-type_high-poly_car.glb",
+        scene,
+        function (meshes) {
+            console.log("loaded success");
+        }
+    );
+    EnableDragAndDropOfEnvLighting(scene, createEnvironmentLighting);
+    // scene.createDefaultCameraOrLight(true, true, true);
+    // const hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("environment.env", scene);
+    // scene.createDefaultSkybox(hdrTexture, true);
 
     return {scene};
 }

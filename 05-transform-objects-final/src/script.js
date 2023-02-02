@@ -15,7 +15,7 @@ const createScene = function () {
     /**
      * Object
      */
-    const cube1 = BABYLON.MeshBuilder.CreateBox("cube1", {height: 1, width: 1, depth: 1});    
+    const cube1 = BABYLON.MeshBuilder.CreateBox("cube1", {height: 1, width: 2, depth: 2});    
     cube1.position.x = - 1.5
     const cube2 = BABYLON.MeshBuilder.CreateBox("cube2", {height: 1, width: 1, depth: 1});    
     cube2.position.x = 0
@@ -30,8 +30,13 @@ const createScene = function () {
     localAxes.yAxis.parent = cube1;
     localAxes.zAxis.parent = cube1;	
     
-    // cube3.parent = cube1;
-    // cube2.parent = cube1;
+    cube3.parent = cube1;
+    cube2.parent = cube1;
+
+    console.log(cube1.position);
+    
+    cube1.translate(new BABYLON.Vector3(1, 1, 0).normalize(), 5, BABYLON.Space.WORLD);
+    // cube1.position = new BABYLON.Vector3(1, 0, 0).multiply(0.1);
     // var boxes = BABYLON.Mesh.MergeMeshes([cube1, cube2, cube3]);
     cube1.rotation.x = Math.PI * 0.25
     cube1.scaling.x = 0.25

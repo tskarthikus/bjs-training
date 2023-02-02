@@ -72,6 +72,55 @@ const createScene = function () {
 
 
     // TODO Ray
+    const rayBox = BABYLON.MeshBuilder.CreateBox("box", {size: 0.4}, scene);
+    rayBox.position.y = 1.22;
+    rayBox.scaling.z = 2;
+
+    const matBox = new BABYLON.StandardMaterial("matBox", scene);
+    matBox.diffuseColor = new BABYLON.Color3(1, 0.1, 0.1);
+    rayBox.material = matBox;
+    rayBox.isPickable = false;
+
+    function mouseMoveOf() {
+        const pickRsult = scene.pick(scene.pointerX, scene.pointerY);
+        if (pickRsult.hit){
+            const diffX = pickRsult.pickedPoint.x - rayBox.position.x;
+            const diffY = pickRsult.pickedPoint.z - rayBox.position.z;
+            rayBox.rotation.y = Math.atan2(diffX, diffY);
+        }
+    }
+    function vecToLocal(vector, mesh) {
+        const m = mesh.getWorldMatrix();
+        const v = BABYLON.Vector3.TransformCoordinates(vector, m);
+        return v;
+    }
+    function castRay() {
+        const origin = rayBox.position;
+
+        let forward = new BABYLON.Vector3(0, 0, 1);
+        forward = vecToLocal(forward, rayBox);
+
+        let direction = forward.subtract(origin);
+        direction = BABYLON.Vector3.Normalize(direction);
+
+        const length = 20;
+        const ray = new BABYLON.Ray(origin, direction, length);
+
+        let rayHelper = new BABYLON.RayHelper(ray);
+        rayHelper.show(scene);
+
+        let hit = scene.pickWithRay(ray);
+
+        if (hit.pickedMesh){
+            hit.pickedMesh.scaling.y += 0.01;
+        }
+    }
+    scene.registerBeforeRender(() => {
+        castRay();
+    })
+    scene.onPointerMove = () => {
+        mouseMoveOf();
+    }
 
     return {scene};
 }

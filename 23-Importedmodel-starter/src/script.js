@@ -1,6 +1,6 @@
 import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 import './style.css'
-
+import "@babylonjs/loaders/glTF"
 
 // Canvas
 const canvas = document.getElementById("webgl"); // Get the canvas element
@@ -33,6 +33,21 @@ const createScene = function () {
     // This attaches the camera to the canvas
     camera.attachControl(canvas, true);
 
+	var light = new BABYLON.PointLight("light", new BABYLON.Vector3(1.5, 1.5, 0), scene);
+    light.intensity = 1.0;
+	
+	var light = new BABYLON.PointLight("light", new BABYLON.Vector3(-1.5, 1.5, 0), scene);
+    light.intensity = 1.0;
+        
+    BABYLON.SceneLoader.ImportMesh(
+        "",
+        "/",
+        "burger.glb",
+        scene,
+        function (meshes) {
+            console.log("loaded successfully!")
+        }
+    )
     return {scene};
 }
 const {scene} = createScene(); //Call the createScene function

@@ -1,7 +1,6 @@
 import * as BABYLON from "@babylonjs/core/Legacy/legacy";
 import './style.css'
 import * as GUI from "@babylonjs/gui";
-// import { MeshWriter } from "meshwriter";
 
 
 // Canvas
@@ -11,8 +10,9 @@ const engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engi
 const createScene = function () {
     // Scene
     const scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color4(0.2, 0.2, 0.0, 1);
     //TODO::
-
+    scene.debugLayer.show({ });
    
     // Creates a light, aiming 0,1,0 - to the sky
     const light = new BABYLON.HemisphericLight("light", 
@@ -39,7 +39,7 @@ const createScene = function () {
     const mesh = BABYLON.MeshBuilder.CreatePlane("plane1", {size: 2}, scene);
     let material = new BABYLON.StandardMaterial("Box Material", scene);
     mesh.material = material;
-    mesh.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y ;
+    mesh.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
 
     var textureGround = new BABYLON.DynamicTexture("dynamictexture", {width:800, height:800}, scene);   
 	material.diffuseTexture = textureGround;

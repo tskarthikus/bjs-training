@@ -45,11 +45,55 @@ const createScene = function () {
 	ground.material = groundMaterial;
 
 	//TODO:: 
+	
+	const lightSphere = BABYLON.MeshBuilder.CreateSphere("sphere", 
+		{
+			segments: 10, 
+			diameter: 2
+		});
+	lightSphere.position = light.position;
+	const emissiveMaterial = new BABYLON.StandardMaterial("light", scene);
+	emissiveMaterial.emissiveColor = new BABYLON.Color3(1, 1, 0);
+	lightSphere.material = emissiveMaterial;
+	
+	var light2 = new BABYLON.SpotLight("spot02", new BABYLON.Vector3(30, 40, 20),
+												new BABYLON.Vector3(-1, -2, -1), 1.1, 16, scene);
+	light2.intensity = 0.5;
+
+	var lightSphere2 = BABYLON.MeshBuilder.CreateSphere("sphere", {segments: 10, diameter: 2}, scene);
+	lightSphere2.position = light2.position;
+	lightSphere2.material = emissiveMaterial;
+	
+	const torus = BABYLON.MeshBuilder.CreateTorus("torus", {
+		thickness: 2,
+		diameter: 5
+	}, scene);
+	torus.position = new BABYLON.Vector3(0, 15, 0);
+
+	const shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+	shadowGenerator.addShadowCaster(torus);
+	// shadowGenerator.useExponentialShadowMap = true;
+
+	shadowGenerator.useBlurExponentialShadowMap = true;
+	shadowGenerator.useKernelBlur = true;
+	shadowGenerator.blurKernel = 64;
+
+	const shadowGenerator2 = new BABYLON.ShadowGenerator(1024, light2);
+	shadowGenerator2.addShadowCaster(torus);
+	shadowGenerator2.usePoissonSampling = true;
 
 
+	ground.receiveShadows = true;
 
 	// Animations
+	let alpha = 0;
 	scene.registerBeforeRender(function () {
+		torus.rotation.x += 0.01;
+		torus.rotation.z += 0.02;
+
+		torus.position = new BABYLON.Vector3(Math.cos(alpha) * 30, 10,
+		Math.sin(alpha) * 30);
+		alpha += 0.01;
 	});
 
     return {scene};

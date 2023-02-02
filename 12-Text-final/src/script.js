@@ -36,12 +36,19 @@ const createScene = function () {
     // This attaches the camera to the canvas
     camera.attachControl(canvas, true);
 
-    const mesh = BABYLON.MeshBuilder.CreateBox("mesh", {height: 1, width: 1, depth: 1});    
+    const mesh = BABYLON.MeshBuilder.CreateBox("mesh", {height: 1, width: 1, depth: 0.1});    
     let material = new BABYLON.StandardMaterial("Box Material", scene);
     mesh.material = material;
+    mesh.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y ;
 
     var textureGround = new BABYLON.DynamicTexture("dynamictexture", {width:800, height:800}, scene);   
 	material.diffuseTexture = textureGround;
+
+    var torus = BABYLON.MeshBuilder.CreateTorus("torus", {thickness: 0.5, diameter: 0.8}, scene);
+    torus.position.x = -4;
+
+	var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 8, height: 4}, scene);	   
+    ground.position.y = -2;
 
     // TODO:: <<
     //Add text to dynamic texture
@@ -50,30 +57,6 @@ const createScene = function () {
     textureGround.drawText(text, 75, 135, font, "green", "white", true, true);
 
 
-    // This creates a GUI3DManager for 3D controls
-    var manager = new GUI.GUI3DManager(scene);
-    
-    // This section shows how to use a HolographicSlate with scrolling
-    var bioSlate = new GUI.HolographicSlate("bioSlate");
-    manager.addControl(bioSlate);
-
-    var bioGrid = new GUI.Grid("bioGrid");
-    var bioText = new GUI.TextBlock("bioText");
-
-    bioText.width = 0.75;
-    bioText.height = 0.55;
-    bioText.color = "white";
-    bioText.textWrapping = GUI.TextWrapping.WordWrap;
-    bioText.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-    bioText.setPadding("0%", "5%", "0%", "0%");
-    bioText.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-    bioText.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-    bioText.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-
-    bioGrid.addControl(bioText);
-    bioGrid.background = "#FF0080";
-    bioSlate.content = bioGrid;
-// TODO:: >>
 
     return {scene};
 }
@@ -86,14 +69,6 @@ const {scene} = createScene(); //Call the createScene function
  */
 let time = Date.now()
 engine.runRenderLoop(function () {
-    // // Time
-    // const currentTime = Date.now()
-    // const deltaTime = currentTime - time
-    // time = currentTime
-
-    // // Update objects
-    // mesh.rotation.x += 0.001 * deltaTime;
-
     scene.render();
 });
 

@@ -1,0 +1,19 @@
+{
+  "name": "code-structuring-exercise",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^4.0.4",
+    "@babylonjs/core": "^5.40.1",
+    "@babylonjs/materials": "^5.40.1"
+  },
+  "dependencies": {
+    "@babylonjs/loaders": "^5.44.0"
+
+  }
+}

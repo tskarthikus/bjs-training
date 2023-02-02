@@ -36,9 +36,36 @@ const createScene = function () {
 	ground.position.y = -2.05;
 	ground.material = groundMaterial;
 
+	// Particle
+	const particleSystem = new BABYLON.ParticleSystem("particles", 200);
+	particleSystem.particleTexture = new BABYLON.Texture("flare.png");
+	// particleSystem.emitter = new BABYLON.Vector3(0, 4.5, 0);
+	particleSystem.start();
 
+	const box = BABYLON.MeshBuilder.CreateBox("box", {});
+	box.position = new BABYLON.Vector3(1, 9, 5);
+	particleSystem.emitter = box;
+	// particleSystem.targetStopDuration = 5;
+	particleSystem.updateSpeed = 0.01;
+	// particleSystem.disposeOnStop = true;
+
+	particleSystem.emitRate = 1500;
+	particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+	// particleSystem.gravity = new BABYLON.Vector3(0, -10, 0);
+
+	// particleSystem.direction1 = new BABYLON.Vector3(-1, -4, 1);
+	// particleSystem.direction2 = new BABYLON.Vector3(1, -4, -1);
 	
-	
+	const noiseTexture = new BABYLON.NoiseProceduralTexture("perlin", 256, scene);
+	noiseTexture.animationSpeedFactor = 0.002;
+	noiseTexture.persistence = 1;
+	noiseTexture.brightness = 0.5;
+	noiseTexture.octaves = 2;
+
+	particleSystem.noiseTexture = noiseTexture;
+	particleSystem.noiseStrength = new BABYLON.Vector3(100, 100, 100);
+
+
 	// Animations
 	scene.registerBeforeRender(function () {
 
